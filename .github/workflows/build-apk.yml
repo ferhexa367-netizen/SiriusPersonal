@@ -21,9 +21,10 @@ jobs:
       - name: Extrair projeto Android
         run: |
           unzip -o Sirius_Personal_Android_Project.zip -d projeto
-          cp -a projeto/Sirius_Personal_Android_Project/. .
-          if [ -d projeto/app ]; then cp -a projeto/app/. app/; fi
+          cp -a projeto/. .
+          echo "Arquivos na raiz:"
           ls -la
+          echo "Arquivos da pasta app:"
           ls -la app
 
       - name: Configurar Java
