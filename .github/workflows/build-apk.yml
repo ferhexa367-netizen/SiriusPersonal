@@ -1,37 +1,47 @@
+
 name: Build Sirius Personal APK
 
 on:
-workflow_dispatch:
-push:
-branches:
-- main
+  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 permissions:
-contents: read
+  contents: read
 
 jobs:
-build:
-runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest
 
-steps:
-  - name: Baixar codigo
-    uses: actions/checkout@v4
+    steps:
+      - name: Baixar repositorio
+        uses: actions/checkout@v4
 
-  - name: Configurar Java
-    uses: actions/setup-java@v4
-    with:
-      distribution: temurin
-      java-version: '17'
+      - name: Extrair projeto Android
+        run: |
+          unzip -o Sirius_Personal_Android_Project.zip -d projeto
+          cp -a projeto/Sirius_Personal_Android_Project/. .
+          if [ -d projeto/app ]; then cp -a projeto/app/. app/; fi
+          ls -la
+          ls -la app
 
-  - name: Configurar Gradle
-    uses: gradle/actions/setup-gradle@v4
+      - name: Configurar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
 
-  - name: Gerar APK
-    run: gradle assembleDebug
+      - name: Configurar Gradle
+        uses: gradle/actions/setup-gradle@v4
 
-  - name: Disponibilizar APK
-    uses: actions/upload-artifact@v4
-    with:
-      name: SiriusPersonal-debug-apk
-      path: app/build/outputs/apk/debug/app-debug.apk
-      if-no-files-found: error
+      - name: Gerar APK
+        run: gradle assembleDebug
+
+      - name: Disponibilizar APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: SiriusPersonal-debug-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          
